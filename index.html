@@ -1,72 +1,43 @@
+<script src="/socket.io/socket.io.js"></script>
 
-<style>
-    body { margin: 0; padding-bottom: 3rem; font-family: 'Arial', sans-serif; background-color: #f4f4f4; }
-    /* Mobile-first approach: Ensure elements take full width */
-    #form { 
-        background: #333; 
-        padding: 0.5rem; 
-        position: fixed; 
-        bottom: 0; 
-        left: 0; 
-        right: 0; 
-        display: flex; 
-        box-sizing: border-box;
-        width: 100%; /* Full width on mobile */
-    }
-    #input { 
-        border: 1px solid #ccc; 
-        padding: 0.5rem; 
-        flex-grow: 1; 
-        border-radius: 5px; 
-        margin-right: 0.5rem; 
-        /* Ensure touch targets are large enough */
-        min-height: 40px;
-    }
-    #form > button { 
-        background: #007bff; 
-        border: none; 
-        padding: 0.5rem 1rem; 
-        border-radius: 5px; 
-        color: white; 
-        cursor: pointer;
-        min-height: 40px;
-    }
-    #messages { 
-        list-style-type: none; 
-        margin: 0; 
-        padding: 10px; 
-        /* Padding at the bottom to see the last message above the fixed form */
-        padding-bottom: 70px; 
-    }
-    #messages > li { 
-        padding: 8px 10px; 
-        margin-bottom: 5px; 
-        background-color: white; 
-        border-radius: 15px; /* Rounded bubbles */
-        box-shadow: 0 1px 1px rgba(0,0,0,0.1); 
-        max-width: 80%; /* Messages look better with a width limit */
-    }
-    .whatsapp-link { 
-        position: fixed; /* Fixed position so it's always accessible */
-        top: 10px; 
-        right: 10px; 
-        padding: 8px 15px; 
-        background-color: #25D366; 
-        color: white; 
-        text-decoration: none; 
-        border-radius: 20px; 
-        font-weight: bold;
-        z-index: 1000; /* Ensure it is on top of other elements */
+<script>
+    // Server سے کنکشن بنائیں
+    const socket = io();
+
+    const form = document.getElementById('form');
+    const input = document.getElementById('input');
+    const messages = document.getElementById('messages');
+
+    // فنکشن: میسجز کو HTML میں شامل کرنا
+    function addMessageToDOM(messageObject) {
+        const item = document.createElement('li');
+        // ہم نے Server سے پورا message object بھیجا ہے، اس لیے ہم messageObject.msg استعمال کریں گے
+        item.textContent = messageObject.msg; 
+        messages.appendChild(item);
+        // Scroll down to see the newest message
+        window.scrollTo(0, document.body.scrollHeight);
     }
 
-    /* Media Query for small screens (Mobile View) */
-    @media (max-width: 600px) {
-        .whatsapp-link {
-            padding: 5px 10px;
-            font-size: 0.8em;
+    // جب user message بھیجے (Form Submit Event)
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (input.value) {
+            // 'chat message' event کے ذریعے پیغام سرور کو بھیجیں
+            // یہاں ہم صرف سادہ string بھیج رہے ہیں، جسے Server (index.js) سنبھالے گا
+            socket.emit('chat message', input.value);
+            input.value = '';
         }
-        #messages {
-            padding: 5px;
-        }
-    }
-</style>
+    });
+
+    // 1. جب Server سے پرانے میسجز (History) ملے (جب کوئی نیا user join کرے)
+    socket.on('output messages', function(messagesArray) {
+        // ہم میسجز کی Array کو iterate کر رہے ہیں
+        messagesArray.forEach(msg => addMessageToDOM(msg));
+    });
+
+    // 2. جب Server سے کوئی نیا live message ملے
+    socket.on('chat message', function(messageObject) {
+        // ہم ایک message object کو شامل کر رہے ہیں
+        addMessageToDOM(messageObject);
+    });
+</script>
