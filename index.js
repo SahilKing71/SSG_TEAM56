@@ -1,34 +1,33 @@
-// server.js
+// index.js (Backend Server - Heroku/Railway پر deploy ہوگا)
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 
-// 1. App setup
 const app = express();
 const server = http.createServer(app);
-// Socket.io کو HTTP سرور سے جوڑیں۔
+
+// Deployment کے لیے ضروری: PORT کو Environment Variable سے لیں۔
+const PORT = process.env.PORT || 3000; 
+
+// Socket.IO کو HTTP سرور کے ساتھ جوڑیں
 const io = socketIo(server);
 
-const PORT = 3000;
-
-// Home page پر ایک سادہ HTML فائل بھیجیں
+// جب کوئی user 'http://yourdomain.com/' پر آئے تو index.html فائل بھیج دیں
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
-// 2. Socket.IO Connection
+// Socket.IO Connection Logic
 io.on('connection', (socket) => {
-    console.log('A user connected: ' + socket.id);
+    console.log('New user connected: ' + socket.id);
 
-    // 3. جب client سے 'chat message' ملے
+    // جب client سے 'chat message' ملے
     socket.on('chat message', (msg) => {
-        console.log('Message received: ' + msg);
-        
-        // یہ پیغام ہر جڑے ہوئے user کو بھیج دیں (Live Broadcast)
+        // یہ پیغام تمام جڑے ہوئے صارفین کو بھیج دیں
         io.emit('chat message', msg);
     });
 
-    // 4. جب user disconnect ہو
+    // جب user disconnect ہو
     socket.on('disconnect', () => {
         console.log('User disconnected: ' + socket.id);
     });
@@ -36,6 +35,5 @@ io.on('connection', (socket) => {
 
 // Server کو start کریں
 server.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-    console.log(`Open this link in multiple tabs to chat live!`);
+    console.log(`Server running on port ${PORT}`);
 });
