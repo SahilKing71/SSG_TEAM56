@@ -2,7 +2,7 @@
   "name": "ssg56-chat-app",
   "version": "1.0.0",
   "description": "Live Chat using Socket.IO",
-  "main": "server.js",  // <-- یہاں فائل کا نام بتائیں
+  "main": "server.js",  //packagejson <-- یہاں فائل کا نام بتائیں
   "scripts": {
     "start": "node server.js"
   },
