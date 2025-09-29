@@ -1,13 +1,15 @@
 {
-  "name": "ssg56-chat-app",
+  "name": "ssg56-live-chat",
   "version": "1.0.0",
-  "description": "Live Chat using Socket.IO",
-  "main": "server.js",  //packagejson <-- یہاں فائل کا نام بتائیں
+  "description": "A live chat application using Node.js and Socket.IO for SSG56.",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "express": "^4.18.2",
     "socket.io": "^4.7.2"
-  }
+  },
+  "author": "Mudasir/SSG56",
+  "license": "ISC"
 }
