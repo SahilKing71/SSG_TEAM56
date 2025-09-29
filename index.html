@@ -1,28 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SSG56 Live Chat</title>
+    <title>SSG56 Live Gup Shup</title>
     <style>
-        body { margin: 0; padding-bottom: 3rem; font-family: sans-serif; }
-        #form { background: #000; padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
-        #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
-        #input:focus { outline: none; }
-        #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
-        #messages { list-style-type: none; margin: 0; padding: 0; }
-        #messages > li { padding: 0.5rem 1rem; border-bottom: 1px solid #eee; }
-        .whatsapp-link { position: absolute; top: 10px; right: 10px; padding: 5px 10px; background-color: #25D366; color: white; text-decoration: none; border-radius: 5px; }
+        body { margin: 0; padding-bottom: 3rem; font-family: 'Arial', sans-serif; background-color: #f4f4f4; }
+        #form { background: #333; padding: 0.5rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; box-sizing: border-box; }
+        #input { border: 1px solid #ccc; padding: 0.5rem; flex-grow: 1; border-radius: 5px; margin-right: 0.5rem; }
+        #form > button { background: #007bff; border: none; padding: 0.5rem 1rem; border-radius: 5px; color: white; cursor: pointer; }
+        #messages { list-style-type: none; margin: 0; padding: 10px; }
+        #messages > li { padding: 8px 10px; margin-bottom: 5px; background-color: white; border-radius: 5px; box-shadow: 0 1px 1px rgba(0,0,0,0.1); }
+        .whatsapp-link { position: absolute; top: 10px; right: 10px; padding: 8px 15px; background-color: #25D366; color: white; text-decoration: none; border-radius: 20px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <a href="https://wa.me/923239956476?text=Hello%20SSG56%2C%20I%20have%20a%20complaint." target="_blank" class="whatsapp-link">
-        WhatsApp Complaint (92323...)
+    <a href="https://wa.me/923239956476?text=Dear%20SSG56%20Admin%2C%20I%20have%20a%20complaint%20regarding%20the%20live%20chat." target="_blank" class="whatsapp-link">
+        Complaint on WhatsApp 💬
     </a>
 
     <ul id="messages"></ul>
     
     <form id="form">
-        <input id="input" autocomplete="off" placeholder="Type your gup shup message here..." />
-        <button>Send</button>
+        <input id="input" autocomplete="off" placeholder="Gup Shup Shuru Karein..." />
+        <button type="submit">Send</button>
     </form>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -35,7 +34,7 @@
         const input = document.getElementById('input');
         const messages = document.getElementById('messages');
 
-        // جب user send button دبائے
+        // جب user message بھیجے
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             if (input.value) {
@@ -45,12 +44,12 @@
             }
         });
 
-        // جب سرور سے 'chat message' ملے
+        // جب سرور سے کوئی message ملے
         socket.on('chat message', function(msg) {
             const item = document.createElement('li');
             item.textContent = msg;
             messages.appendChild(item);
-            // Scroll to the bottom
+            // Scroll down
             window.scrollTo(0, document.body.scrollHeight);
         });
     </script>
